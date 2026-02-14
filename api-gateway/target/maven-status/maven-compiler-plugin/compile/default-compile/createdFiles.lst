@@ -1,4 +1,0 @@
-com/cognizant/gateway/GatewayappApplication.class
-com/cognizant/gateway/services/TokenService.class
-com/cognizant/gateway/configurations/SecurityConfig.class
-com/cognizant/gateway/controllers/ApiController.class
