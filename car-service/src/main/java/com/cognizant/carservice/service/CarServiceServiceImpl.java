@@ -1,5 +1,7 @@
 package com.cognizant.carservice.service;
 
+import com.cognizant.carservice.client.UserServiceClient;
+import com.cognizant.carservice.exception.CustomerNotFoundException;
 import com.cognizant.carservice.exception.DuplicateResourceException;
 import com.cognizant.carservice.exception.ResourceNotFoundException;
 import com.cognizant.carservice.model.CarService;
@@ -15,12 +17,10 @@ import java.util.List;
 public class CarServiceServiceImpl implements CarServiceService {
 
     private final CarServiceRepository repository;
+    private final UserServiceClient userServiceClient;
 
     @Override
     public CarService addCarService(CarService carService) {
-
-        // ensure new record
-        carService.setId(null);
 
         if (carService.getServiceDate() == null) {
             throw new RuntimeException("Service date is required");
@@ -30,8 +30,12 @@ public class CarServiceServiceImpl implements CarServiceService {
             throw new RuntimeException("Service date cannot be in future");
         }
 
+        if (!userServiceClient.userExists(carService.getCustomerId())) {
+            throw new CustomerNotFoundException("Customer does not exist");
+        }
+
         if (repository.existsByCarRegistrationNumber(carService.getCarRegistrationNumber())) {
-            throw new DuplicateResourceException("Car with this registration already exists");
+            throw new DuplicateResourceException("Car already exists");
         }
 
         return repository.save(carService);

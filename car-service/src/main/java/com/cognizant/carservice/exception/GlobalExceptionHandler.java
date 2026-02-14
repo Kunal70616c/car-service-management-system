@@ -2,10 +2,10 @@ package com.cognizant.carservice.exception;
 
 import com.cognizant.carservice.dto.GenericResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.AccessDeniedException;
-
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +26,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<GenericResponse<Map<String,String>>> handleValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<GenericResponse<Map<String, String>>> handleValidation(MethodArgumentNotValidException ex) {
 
-        Map<String,String> errors = new HashMap<>();
+        Map<String, String> errors = new HashMap<>();
 
         ex.getBindingResult().getFieldErrors().forEach(err ->
                 errors.put(err.getField(), err.getDefaultMessage())
@@ -46,6 +46,13 @@ public class GlobalExceptionHandler {
                 .status(403)
                 .body(new GenericResponse<>("Access Denied: You are not authorized to perform this action"));
     }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<GenericResponse<?>> handleCustomerNotFound(CustomerNotFoundException ex) {
+        return ResponseEntity.status(404)
+                .body(new GenericResponse<>(ex.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GenericResponse<?>> handleGeneric(Exception ex) {
         return ResponseEntity.status(500)
