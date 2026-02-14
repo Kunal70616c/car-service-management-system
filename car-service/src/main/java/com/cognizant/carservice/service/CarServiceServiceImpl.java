@@ -1,8 +1,10 @@
 package com.cognizant.carservice.service;
 
+import com.cognizant.carservice.client.CarValidationServiceClient;
 import com.cognizant.carservice.client.UserServiceClient;
 import com.cognizant.carservice.exception.CustomerNotFoundException;
 import com.cognizant.carservice.exception.DuplicateResourceException;
+import com.cognizant.carservice.exception.InvalidCarException;
 import com.cognizant.carservice.exception.ResourceNotFoundException;
 import com.cognizant.carservice.model.CarService;
 import com.cognizant.carservice.repository.CarServiceRepository;
@@ -18,6 +20,7 @@ public class CarServiceServiceImpl implements CarServiceService {
 
     private final CarServiceRepository repository;
     private final UserServiceClient userServiceClient;
+    private final CarValidationServiceClient carValidationClient;
 
     @Override
     public CarService addCarService(CarService carService) {
@@ -37,7 +40,12 @@ public class CarServiceServiceImpl implements CarServiceService {
         if (repository.existsByCarRegistrationNumber(carService.getCarRegistrationNumber())) {
             throw new DuplicateResourceException("Car already exists");
         }
+        // car number validation
+        boolean validCar = carValidationClient.isCarValid(carService.getCarRegistrationNumber());
 
+        if (!validCar) {
+            throw new InvalidCarException("Invalid car registration number");
+        }
         return repository.save(carService);
     }
 

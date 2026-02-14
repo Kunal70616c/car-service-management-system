@@ -53,6 +53,12 @@ public class GlobalExceptionHandler {
                 .body(new GenericResponse<>(ex.getMessage()));
     }
 
+    @ExceptionHandler(InvalidCarException.class)
+    public ResponseEntity<GenericResponse<?>> handleInvalidCar(InvalidCarException ex) {
+        return ResponseEntity.status(400)
+                .body(new GenericResponse<>(ex.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GenericResponse<?>> handleGeneric(Exception ex) {
         return ResponseEntity.status(500)
