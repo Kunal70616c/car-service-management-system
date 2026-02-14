@@ -4,6 +4,7 @@ com/cognizant/carservice/dto/GenericResponse.class
 com/cognizant/carservice/service/CarServiceServiceImpl.class
 com/cognizant/carservice/exception/DuplicateResourceException.class
 com/cognizant/carservice/dto/CarServiceResponse.class
+com/cognizant/carservice/config/OpenAPISecurityConfig.class
 com/cognizant/carservice/controller/CarServiceController.class
 com/cognizant/carservice/config/SwaggerConfig.class
 com/cognizant/carservice/enums/ServiceType.class
@@ -14,6 +15,7 @@ com/cognizant/carservice/CarserviceApplication.class
 com/cognizant/carservice/enums/ServiceStatus.class
 com/cognizant/carservice/repository/CarServiceRepository.class
 com/cognizant/carservice/exception/GlobalExceptionHandler.class
+com/cognizant/carservice/config/SecurityConfig.class
 com/cognizant/carservice/exception/ResourceNotFoundException.class
 com/cognizant/carservice/dto/CarServiceDTO$CarServiceDTOBuilder.class
 com/cognizant/carservice/mapper/CarServiceMapper.class

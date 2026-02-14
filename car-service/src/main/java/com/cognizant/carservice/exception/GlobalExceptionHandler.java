@@ -4,6 +4,8 @@ import com.cognizant.carservice.dto.GenericResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +38,14 @@ public class GlobalExceptionHandler {
                 .body(new GenericResponse<>("Validation failed", errors));
     }
 
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<GenericResponse<String>> handleAccessDeniedException(AccessDeniedException ex) {
+
+        return ResponseEntity
+                .status(403)
+                .body(new GenericResponse<>("Access Denied: You are not authorized to perform this action"));
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GenericResponse<?>> handleGeneric(Exception ex) {
         return ResponseEntity.status(500)

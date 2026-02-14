@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +42,8 @@ public class CarServiceController {
     }
 
     // GET ALL
-    @GetMapping
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin','SCOPE_user')")
     public ResponseEntity<GenericResponse<List<CarServiceResponse>>> getAll() {
 
         List<CarService> list = service.getAllCarServices();
@@ -51,7 +53,8 @@ public class CarServiceController {
     }
 
     // GET BY ID
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin','SCOPE_user')")
     public ResponseEntity<GenericResponse<CarServiceResponse>> getById(@PathVariable Long id) {
 
         CarService car = service.getCarServiceById(id);
@@ -63,6 +66,7 @@ public class CarServiceController {
 
     // UPDATE
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin')")
     public ResponseEntity<GenericResponse<CarServiceResponse>> update(
             @PathVariable Long id,
             @Valid @RequestBody CarServiceDTO dto) {
@@ -76,6 +80,7 @@ public class CarServiceController {
 
     // DELETE
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin')")
     public ResponseEntity<GenericResponse<String>> delete(@PathVariable Long id) {
 
         service.deleteCarService(id);
