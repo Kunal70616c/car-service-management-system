@@ -3,17 +3,7 @@ server:
 
 spring:
   application:
-    name: api-gateway
-
-  cloud:
-    gateway:
-      server:
-        webflux:
-          routes:
-            - id: car-service
-              uri: lb://CAR-SERVICE
-              predicates:
-                - Path=/carservice/**
+    name: apigateway
 
   security:
     oauth2:

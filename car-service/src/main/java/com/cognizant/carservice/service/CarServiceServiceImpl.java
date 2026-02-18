@@ -12,6 +12,7 @@ import com.cognizant.carservice.repository.CarServiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,11 +27,16 @@ public class CarServiceServiceImpl implements CarServiceService {
     private final CarValidationServiceClient carValidationClient;
     private final AuditServiceClient auditClient;
 
-    // ===== helper to get logged in username from JWT =====
+    // ===== helper to get logged-in username from JWT =====
     private String getLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) return "SYSTEM";
-        return auth.getName(); // username from keycloak token
+        if(auth instanceof JwtAuthenticationToken jwtAuth){
+            String username = jwtAuth.getToken().getClaimAsString("azp");
+            if(username!= null){
+                return username;
+            }
+        }
+        return "SYSTEM"; // username from keycloak token
     }
 
     @Override
