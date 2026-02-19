@@ -1,0 +1,161 @@
+%PDF-1.4
+%
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 3 0 R 5 0 R 7 0 R ] /Count 3 >>
+endobj
+3 0 obj
+<< /Length 1990 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 54 738 Tm
+15 TL
+(# Car Service Management System - Project Flow) Tj
+() '
+(## 1\) High-level Architecture) '
+() '
+(The system is built as Spring Boot microservices with separate responsibilities:) '
+() '
+(- Eureka Server: service discovery registry.) '
+(- Gateway Layer: JWT validation + routing to backend services.) '
+(- Car Service: main business workflow for service records.) '
+(- User Service: user profile CRUD + internal existence validation.) '
+(- Car Validation Service: validates vehicle registration format.) '
+(- Audit Service: central audit log store.) '
+() '
+(Each service owns its own database, and services communicate over HTTP.) '
+() '
+(---) '
+() '
+(## 2\) End-to-End Request Flow \(Create Car Service\)) '
+() '
+(1. Client obtains JWT from Keycloak \(or uses gateway token endpoint in local setup\).) '
+(2. Client calls gateway with Authorization: Bearer <token>.) '
+(3. Gateway validates JWT and routes request to Car Service \(via discovery/load balancing\).) '
+(4. Car Service controller receives DTO and maps it to entity.) '
+(5. Car Service business checks run:) '
+(   - service date present and not in future,) '
+(   - user exists \(calls User Service\),) '
+(   - no duplicate car registration,) '
+(   - car registration valid \(calls Car Validation Service\).) '
+(6. Car Service persists record in its own DB.) '
+(7. Car Service emits audit event to Audit Service \(CREATE action with actor + details\).) '
+(8. Gateway returns response to client.) '
+() '
+(---) '
+() '
+(## 3\) Role and Security Flow) '
+() '
+(- JWT is validated at gateway and/or resource-server services.) '
+(- Method-level authorization enforces scopes:) '
+(  - SCOPE_admin: full CRUD actions.) '
+(  - SCOPE_user: read-level access where allowed.) '
+(  - SCOPE_internal_service: internal endpoint access \(e.g., user existence check\).) '
+(- Car Service can fetch internal service tokens using Keycloak client credentials to call other) '
+(services securely.) '
+() '
+(---) '
+ET
+endstream
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+5 0 obj
+<< /Length 1228 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 54 738 Tm
+15 TL
+() Tj
+(## 4\) Service Responsibilities in Runtime) '
+() '
+(### Car Service) '
+(- Entry points for create/read/update/delete of car service records.) '
+(- Orchestrates calls to User Service, Car Validation Service, and Audit Service.) '
+() '
+(### User Service) '
+(- Manages user profiles.) '
+(- Exposes internal endpoint for "does user exist?" checks used by Car Service.) '
+() '
+(### Car Validation Service) '
+(- Validates registration numbers with regex.) '
+(- Saves validation history log.) '
+() '
+(### Audit Service) '
+(- Accepts audit events from Car Service.) '
+(- Stores and serves audit history.) '
+() '
+(---) '
+() '
+(## 5\) Startup Sequence) '
+() '
+(Recommended startup order:) '
+() '
+(1. Eureka Server) '
+(2. User Service) '
+(3. Car Validation Service) '
+(4. Audit Service) '
+(5. Car Service) '
+(6. API Gateway) '
+() '
+(This ensures dependencies are discoverable before orchestration-heavy services start serving) '
+(traffic.) '
+() '
+(---) '
+() '
+(## 6\) Practical Summary) '
+() '
+(Think of Car Service as the orchestrator:) '
+() '
+(- It receives business requests,) '
+(- validates domain constraints,) '
+(- verifies cross-service dependencies,) '
+(- saves core business data,) '
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 4 0 R >>
+endobj
+7 0 obj
+<< /Length 190 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 54 738 Tm
+15 TL
+(- and then emits audit trails.) Tj
+() '
+(So the flow is: Auth + Route -> Validate dependencies -> Persist business record -> Audit ->) '
+(Respond.) '
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 6 0 R >>
+endobj
+9 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000015 00000 n 
+0000000085 00000 n 
+0000000156 00000 n 
+0000002198 00000 n 
+0000002324 00000 n 
+0000003604 00000 n 
+0000003730 00000 n 
+0000003971 00000 n 
+0000004097 00000 n 
+trailer
+<< /Size 10 /Root 9 0 R >>
+startxref
+4146
+%%EOF
